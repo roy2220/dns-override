@@ -112,6 +112,15 @@ fake_fopen(const char *path, const char *mode)
         } else {
             result = fopen(path_resconf, mode);
         }
+    } else if (strcmp(path, "/etc/hosts") == 0) {
+        const char *path_hosts;
+        path_hosts = getenv("PATH_HOSTS");
+
+        if (path_hosts == NULL) {
+            result = fopen("/etc/hosts", mode);
+        } else {
+            result = fopen(path_hosts, mode);
+        }
     } else {
         result = fopen(path, mode);
     }
