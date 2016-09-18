@@ -38,6 +38,7 @@ fin(void)
     subhook_remove(gethostbyname_hook);
     subhook_free(getaddrinfo_hook);
     subhook_free(gethostbyname_hook);
+    subhook_free(fopen_hook);
 }
 
 
