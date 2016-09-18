@@ -108,21 +108,21 @@ fake_fopen(const char *path, const char *mode)
         path_resconf = getenv("PATH_RESCONF");
 
         if (path_resconf == NULL) {
-            result = fopen("/etc/resolv.conf", mode);
+            result = real_fopen("/etc/resolv.conf", mode);
         } else {
-            result = fopen(path_resconf, mode);
+            result = real_fopen(path_resconf, mode);
         }
     } else if (strcmp(path, "/etc/hosts") == 0) {
         const char *path_hosts;
         path_hosts = getenv("PATH_HOSTS");
 
         if (path_hosts == NULL) {
-            result = fopen("/etc/hosts", mode);
+            result = real_fopen("/etc/hosts", mode);
         } else {
-            result = fopen(path_hosts, mode);
+            result = real_fopen(path_hosts, mode);
         }
     } else {
-        result = fopen(path, mode);
+        result = real_fopen(path, mode);
     }
 
     if (real_fopen == fopen) {
