@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+help() {
+    tee << EOF
+Usage: $0 COMMAND-LINE
+       --hosts=HOSTS-FILE                   override /etc/host.conf
+       --resolv-conf=RESOLVE-CONFIG-FILE    override /etc/resolv.conf
+EOF
+}
+
+temp=$(getopt -o '' --long hosts:,resolv-conf:,help -n "$0" -- "$@")
+
+if [ $? -ne 0 ]; then
+    exit $?
+fi
+
+eval set -- "${temp}"
+
+hosts_file=/etc/host.conf
+resolve_config_file=/etc/resolv.conf
+
+while true; do
+    case "$1" in
+    --hosts)
+        hosts_file=$2
+        shift 2
+        ;;
+    --resolv-conf)
+        resolve_config_file=$2
+        shift 2
+        ;;
+    --help)
+        help
+        exit 0
+        ;;
+    --)
+        shift
+        break
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+set -o errexit -o nounset -o pipefail # -o xtrace
+
+LD_PRELOAD=$(dirname $(realpath $0))/libdns-override.so \
+PATH_HOSTS=${hosts_file} \
+PATH_RESCONF=${resolve_config_file} \
+"$@"
